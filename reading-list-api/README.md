@@ -45,7 +45,7 @@ The following steps will guide you through the process of creating and deploying
 
 ### API Proxy Behavior
 
-The Reading List API Proxy provides the following functionality:
+***The Reading List API Proxy provides the following functionality:***
 
 - **GET /books**: Returns a list of pre-defined books with a warning that changes are not persisted.
 - **POST /books**: Adds a new book to the reading list (without including `id` in the request body). Returns the created book along with a warning that changes are not persisted.
