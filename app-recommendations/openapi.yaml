@@ -1,0 +1,161 @@
+openapi: 3.0.1
+info:
+  title: App Recommendations API
+  description: This API provides personalized app recommendations based on device specifications and user context.
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://apis.bijira.dev/samples/app-recommendations-api/v1.0
+paths:
+  /getAppRecommendations:
+    post:
+      tags:
+        - recommendations
+      summary: Get personalized app recommendations
+      operationId: getAppRecommendations
+      description: Returns a list of personalized app recommendations based on device specifications, user preferences, and contextual information.
+      requestBody:
+        description: Request parameters for app recommendations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppRecommendationRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppRecommendationResponse'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AppRecommendationRequest:
+      type: object
+      required:
+        - aaid
+        - deviceSpec
+        - deviceManufacturer
+        - deviceModel
+        - osVersion
+        - deviceLanguage
+        - deviceGeo
+        - userExperience
+        - category
+        - remainingSpace
+      properties:
+        aaid:
+          type: string
+          format: uuid
+          description: Advertising ID
+          example: cef029e9-9692-4f0d-bda4-cfb7ee00af12
+        deviceSpec:
+          type: string
+          description: Device specification tier
+          example: high-end
+        deviceManufacturer:
+          type: string
+          description: Device manufacturer name
+          example: Samsung
+        deviceModel:
+          type: string
+          description: Device model name
+          example: Galaxy S21
+        osVersion:
+          type: integer
+          description: Operating system version
+          example: 13
+        deviceLanguage:
+          type: string
+          description: Device language setting
+          example: en-US
+        deviceGeo:
+          type: string
+          description: Device geographic location (country code)
+          example: US
+        userExperience:
+          type: string
+          description: User experience preference
+          example: enum_value_1
+        category:
+          type: string
+          description: Preferred app category
+          example: Games
+        remainingSpace:
+          type: integer
+          description: Remaining storage space in MB
+          example: 200
+        contextStrings:
+          type: array
+          description: Contextual tags for better recommendations
+          items:
+            type: string
+          example:
+            - gaming
+            - mobile
+    AppRecommendationResponse:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recommendation'
+    Recommendation:
+      type: object
+      properties:
+        contentUri:
+          type: string
+          description: URI to the content
+          example: ""
+        recommendationRationale:
+          type: string
+          description: Reason for the recommendation
+          example: Perfect match for your device
+        title:
+          type: string
+          description: App title
+          example: Genies & Gems
+        icon:
+          type: string
+          format: uri
+          description: URL to the app icon
+          example: https://storage.googleapis.com/gcs-cs-ignite-microservices-static-images-useast1/shared/creatives/12619/4b62f1f4c7e149759b6ebbfa156d6d87.png
+        singletapDeeplink:
+          type: string
+          format: uri
+          description: Deep link for single-tap installation
+          example: https://delivers.dtignite.com/v2/delivers/clickAd.jsp?siteId=12773&deviceId=7265&sessionId=1760934438001&packageName=com.sgn.geniesandgems.gp&aaid=test123&deviceManufacturer=Samsung&deviceModel=Galaxy&countryCode=US
+        bidId:
+          type: string
+          description: Unique bid identifier
+          example: BID37329240668068994286392446866763739482
+        appRank:
+          type: string
+          description: App ranking position
+          example: "1"
+        categoryName:
+          type: string
+          description: App category name
+          example: Puzzle
+    ErrorResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: High-level error message
+          example: Invalid request format
+        message:
+          type: string
+          description: Detailed error message
+          example: "Missing required field: aaid"
+        timestamp:
+          type: number
+          format: double
+          description: Unix timestamp with milliseconds
+          example: 1729425600.123
